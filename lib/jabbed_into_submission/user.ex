@@ -19,13 +19,12 @@ defmodule JabbedIntoSubmission.User do
   def unregister(user, host) when is_bitstring(user) and is_bitstring(host),
   do: Client.post!("/unregister", Poison.encode!(%{user: user, host: host}), @headers)
 
-  @doc "STUB"
-  def rooms(_user, _host) do
-    :stub
-  end
+  @doc "Change a user's password"
+  def change_password(user, host, new_pass),
+  do: Client.post!("/change_password", Poison.encode!(%{user: user, host: host, newpass: new_pass}), @headers)
 
   @doc "STUB"
-  def change_password(_user, _host, _new_pass) do
+  def rooms(_user, _host) do
     :stub
   end
 
