@@ -8,11 +8,13 @@ defmodule JabbedIntoSubmission.MUCTest do
   @room     "dummy"
   @nodes    "urn:xmpp:mucsub:nodes:messages,urn:xmpp:mucsub:nodes:affiliations"
   @user     "dummy_user"
+  @device   "#{@user}@#{@host}/dummydevice"
+  @room_jid "#{@room}@#{@muc_host}"
 
   setup do
     # Delete all groups
     User.unregister(@user, @host)
-    MUC.unsubscribe("#{@user}@#{@host}/dummydevice", "#{@room}@#{@muc_host}")
+    MUC.unsubscribe(@device, @room_jid)
     MUC.destroy(@room, @muc_host)
     :ok
   end
@@ -42,19 +44,22 @@ defmodule JabbedIntoSubmission.MUCTest do
     end
 
     test "MUC options" do
-      MUC.create(@room, @muc_host, @host, %{title: "Title", allow_subscription: true})
+      assert MUC.create(@room, @muc_host, @host, %{title: "Title", allow_subscription: true}).body == 0
       res = MUC.get_options(@room, @muc_host)
       assert res.status_code == 200
     end
 
     test "subscribe & unsubscribe" do
-      MUC.create(@room, @muc_host, @host, %{title: "Title", allow_subscription: true})
-      User.register(@user, @host, "password")
-      MUC.subscribe("#{@user}@#{@host}/dummydevice", @user, "#{@room}@#{@muc_host}", @nodes)
+      assert MUC.create(@room, @muc_host, @host, %{title: "Title", allow_subscription: true, persistent: true}).body == 0
+      assert User.register(@user, @host, "password").body == "User dummy_user@localhost successfully registered"
+
+      assert MUC.get_subscribers(@room, @muc_host).body == []
+
+      assert MUC.subscribe(@device, @user, @room_jid, @nodes).status_code == 200
 
       assert MUC.get_subscribers(@room, @muc_host).body == ["#{@user}@#{@host}"]
 
-      MUC.unsubscribe("#{@user}@#{@host}/dummydevice", "#{@room}@#{@muc_host}")
+      assert MUC.unsubscribe(@device, "#{@room}@#{@muc_host}").body == 0
 
       assert MUC.get_subscribers(@room, @muc_host).body == []
     end
