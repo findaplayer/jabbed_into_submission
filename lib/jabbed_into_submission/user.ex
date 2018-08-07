@@ -37,4 +37,29 @@ defmodule JabbedIntoSubmission.User do
   def ban(_user, _host, _reason) do
     :stub
   end
+
+  def block_users(user, host, block_list) do
+
+    list_items = Enum.map( Enum.with_index(block_list), fn({user,index}) -> 
+"<item type='jid'
+                  value='user_#{user}@#{host}'
+                  action='deny'
+                  order='#{index}'/>" end) |> Enum.join("")
+
+    xml_block_list_query = "
+              <query xmlns='jabber:iq:privacy'>
+                <list name='#{user}_block_list'>
+                 "
+                <>
+
+                list_items
+                  
+                <>
+                "
+               </list>
+              </query>"
+
+    Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_block_list_query}), @headers)
+  end
+
 end

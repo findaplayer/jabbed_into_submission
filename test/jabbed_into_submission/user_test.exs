@@ -26,5 +26,9 @@ defmodule JabbedIntoSubmission.UserTest do
       assert User.change_password(@user, @host, "password2").body == 0
     end
 
+    test "block_users" do
+      User.block_users(@user, @host, [23456,23456,123458])
+    end
+
   end
 end
