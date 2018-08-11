@@ -33,6 +33,19 @@ defmodule JabbedIntoSubmission.MUC do
     Client.post!("/create_room_with_opts", payload, @headers)
   end
 
+  @doc "Change room options"
+  def chacnge_room_option(name, service, option, value) do
+
+    payload = Poison.encode!(%{
+      name: name,
+      service: service,
+      option: option,
+      value: value
+    })
+
+    Client.post!("/change_room_option", payload, @headers)
+  end
+
   @doc "Get the Options for a room"
   def get_options(name, service) when is_bitstring(name) and is_bitstring(service),
   do: Client.post!("/get_room_options", Poison.encode!(%{name: name, service: service}), @headers)
