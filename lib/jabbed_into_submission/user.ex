@@ -49,7 +49,13 @@ defmodule JabbedIntoSubmission.User do
                 <>
                 "</list></query>"
 
-    Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_block_list_query}), @headers)
+    list_update_set = Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_block_list_query}), @headers)
+
+    cond do
+      length(block_list) == 1 -> set_block_list_default(user, host)
+      true -> list_update_set
+    end
+
   end
 
   @doc "Set the users default privacy list based on xmpp username"
