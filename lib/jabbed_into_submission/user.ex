@@ -49,9 +49,29 @@ defmodule JabbedIntoSubmission.User do
                 <>
                 "</list></query>"
 
-    IO.puts xml_block_list_query
-
     Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_block_list_query}), @headers)
+  end
+
+  @doc "Set the users default privacy list based on xmpp username"
+  def set_block_list_default(user, host) do
+    
+    xml_query = "<query xmlns='jabber:iq:privacy'>
+      <default name='#{user}_block_list'/>
+    </query>"
+
+    Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_query}), @headers)
+
+  end
+
+  @doc "Set the users default privacy list based on xmpp username"
+  def set_block_list_active(user, host) do
+    
+    xml_query = "<query xmlns='jabber:iq:privacy'>
+      <active name='#{user}_block_list'/>
+    </query>"
+
+    Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_query}), @headers)
+
   end
 
 end
