@@ -30,8 +30,8 @@ defmodule JabbedIntoSubmission.Mixfile do
   defp deps do
     [
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
-      {:httpoison, "~> 0.13"},
-      {:poison, "~> 2.2"}
+      {:httpoison, "~> 1.4"},
+      {:poison, "~> 3.0"}
     ]
   end
 end

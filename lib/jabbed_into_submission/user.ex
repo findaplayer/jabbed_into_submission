@@ -49,6 +49,12 @@ defmodule JabbedIntoSubmission.User do
                 <>
                 "</list></query>"
 
+    #if the list is empty I need to decline the use of the default privacy list before deleting it
+    cond do
+      length(block_list) == 0 -> unset_block_list_default(user, host)
+      true -> #nothing
+    end
+
     list_update_set = Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_block_list_query}), @headers)
 
     cond do
@@ -63,6 +69,17 @@ defmodule JabbedIntoSubmission.User do
     
     xml_query = "<query xmlns='jabber:iq:privacy'>
       <default name='#{user}_block_list'/>
+    </query>"
+
+    Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_query}), @headers)
+
+  end
+
+  @doc "Set the users default privacy list based on xmpp username"
+  def unset_block_list_default(user, host) do
+    
+    xml_query = "<query xmlns='jabber:iq:privacy'>
+      <default/>
     </query>"
 
     Client.post!("/privacy_set", Poison.encode!(%{user: user, host: host, xmlquery: xml_query}), @headers)
