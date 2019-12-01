@@ -34,7 +34,7 @@ defmodule JabbedIntoSubmission.MUC do
   end
 
   @doc "Change room options"
-  def chacnge_room_option(name, service, option, value) do
+  def change_room_option(name, service, option, value) do
 
     payload = Poison.encode!(%{
       name: name,

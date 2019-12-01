@@ -3,8 +3,8 @@ defmodule JabbedIntoSubmission.Mixfile do
 
   def project do
     [app: :jabbed_into_submission,
-     version: "0.1.0",
-     elixir: "~> 1.4",
+     version: "0.1.1",
+     elixir: "~> 1.8",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
