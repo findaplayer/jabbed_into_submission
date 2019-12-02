@@ -66,6 +66,12 @@ defmodule JabbedIntoSubmission.MUC do
   def get_subscribers(name, service),
   do: Client.post!("/get_subscribers", Poison.encode!(%{name: name, service: service}), @headers)
 
+  @doc "Set room affiliation one of: owner, admin, member, outcast, none"
+  def set_room_affiliation(user, name, service, affiliation) when is_bitstring(user) and is_bitstring(name) and is_bitstring(service) and is_bitstring(affiliation) do
+    payload = Poison.encode!(%{name: name, service: service, jid: user, affiliation: affiliation})
+    Client.post!("/set_room_affiliation", payload, @headers)
+  end
+  
   ### Utils
 
   def map_to_options(options) when is_map(options) do
